@@ -1,9 +1,11 @@
 package in.flowers.api;
 
+import in.flowers.db.dto.ImageDto;
 import in.flowers.db.model.Flower;
 import in.flowers.db.model.Image;
 import in.flowers.db.repository.FlowerRepository;
 import in.flowers.db.repository.ImageRepository;
+import in.flowers.db.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,69 +21,38 @@ import java.util.List;
 @RequestMapping(value = "/api/images")
 public class ImageApi {
 
-    private final FlowerRepository flowerRepository;
+    private final ImageService imageService;
 
-    public ImageApi(FlowerRepository flowerRepository) {
-        this.flowerRepository = flowerRepository;
+    public ImageApi(ImageService imageService) {
+        this.imageService = imageService;
     }
-    @Autowired
-    private ImageRepository imageRepository;
 
-
-    @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getById(@PathVariable("id") Long id) throws IOException, ClassNotFoundException {
-        Image image = imageRepository.findById(id).get();
-        FileInputStream fls = new FileInputStream(image.getPath());
-        ObjectInputStream ois = new ObjectInputStream(fls);
-
-        byte[] byteTest = (byte[]) ois.readObject();
-
-        ois.close();
+    @GetMapping
+    public ResponseEntity<List<ImageDto>> getAll() {
         return ResponseEntity
                 .ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(byteTest);
-    }
-//    @GetMapping("/{id}")
-//    public ResponseEntity<List<byte[]>>getAll(){
-//
-//        return null;
-//    }
+//                .contentType(MediaType.IMAGE_JPEG)
+                .body(imageService.findAll());
 
-    @PostMapping()
-    public ResponseEntity<byte[]> addImage(@RequestParam("file") MultipartFile file, @RequestParam("id") Long id) {
-        try {
-            Flower flower = flowerRepository.findById(id).get();
-            Image image = new Image();
-            Long pathId = (long) flower.getImages().size() + 1;
-            String path = "image/flowers/" + "flower-" + flower.getId() + "_post-" + pathId + ".bin";
-            new File(path).createNewFile();
-
-
-            image.setPath(path);
-            flower.addImageToFlower(image);
-
-            flowerRepository.save(flower);
-
-            byte[] bytes = StreamUtils.copyToByteArray(file.getInputStream());
-            FileOutputStream fos = new FileOutputStream(path);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-
-            oos.writeObject(bytes);
-            oos.close();
-
-            System.out.println(Arrays.toString(bytes));
-            return ResponseEntity
-                    .ok()
-                    .contentType(MediaType.IMAGE_JPEG)
-                    .body(bytes);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ImageDto> getById(@PathVariable Long id) {
+        return ResponseEntity
+                .ok()
+//                .contentType(MediaType.IMAGE_JPEG)
+                .body(imageService.findById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<ImageDto> saveImage(@RequestParam("file") MultipartFile file,
+                                              @RequestParam("id") Long id) {
+        ImageDto imageDto = imageService.saveImage(file, id);
+        return ResponseEntity
+                .ok()
+//                .contentType(MediaType.IMAGE_JPEG)
+                .body(imageDto);
+
+    }
 
 }
