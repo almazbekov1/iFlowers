@@ -15,38 +15,4 @@ import java.util.List;
 @RequestMapping(value = "/test")
 public class TestController {
 
-    private final ImageService imageService;
-
-    public TestController(ImageService imageService) {
-        this.imageService = imageService;
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ImageDto>> getAll() {
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(imageService.findAll());
-
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ImageDto> getById(@PathVariable Long id) {
-        return ResponseEntity
-                .ok()
-//                .contentType(MediaType.IMAGE_JPEG)
-                .body(imageService.findById(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<ImageDto> saveImage(@RequestParam("file") MultipartFile file,
-                                              @RequestParam("id") Long id) {
-        ImageDto imageDto = imageService.saveImage(file, id);
-        return ResponseEntity
-                .ok()
-//                .contentType(MediaType.IMAGE_JPEG)
-                .body(imageDto);
-
-    }
-
 }
