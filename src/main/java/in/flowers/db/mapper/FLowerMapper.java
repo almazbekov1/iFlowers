@@ -12,6 +12,12 @@ import java.util.List;
 @Component
 public class FLowerMapper {
 
+    private final ImageMapper imageMapper;
+
+    public FLowerMapper(ImageMapper imageMapper) {
+        this.imageMapper = imageMapper;
+    }
+
     public Flower toFlower(FlowerDto flowerDto) {
         Flower flower = new Flower();
         flower.setId(flowerDto.getId());
@@ -24,10 +30,10 @@ public class FLowerMapper {
         FlowerDto flowerDto = new FlowerDto();
         flowerDto.setId(flower.getId());
         flowerDto.setName(flower.getName());
-//        flowerDto.setImage(flower.getImage());
         flowerDto.setDescription(flower.getDescription());
         flowerDto.setPrice(flower.getPrice());
         flowerDto.setCategory(fromCategory(flower.getCategory()));
+        flowerDto.setImages(imageMapper.fromImages(flower.getImages()));
 
         return flowerDto;
     }
