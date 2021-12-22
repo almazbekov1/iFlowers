@@ -33,19 +33,14 @@ public class FlowerApi {
     public ResponseEntity<List<FlowerDto>> getFlowers(){
         return new ResponseEntity<>(flowerService.getAll(), HttpStatus.OK);
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getById(@PathVariable("id") Long id) throws IOException, ClassNotFoundException {
-        Flower flower = flowerService.findById(id);
-        FileInputStream fls = new FileInputStream(flower.getImages().get(0).getPath());
-        ObjectInputStream ois = new ObjectInputStream(fls);
-
-        byte[] byteTest = (byte[]) ois.readObject();
-
-        ois.close();
+    public ResponseEntity<FlowerDto> getById(@PathVariable("id") Long id){
+        FlowerDto flower = flowerService.findById(id);
         return ResponseEntity
                 .ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(byteTest);
+//                .contentType(MediaType.IMAGE_JPEG)
+                .body(flower);
     }
 
 }

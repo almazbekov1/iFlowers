@@ -2,6 +2,7 @@ package in.flowers.api;
 
 
 import in.flowers.db.dto.AuthenticationRequestDto;
+import in.flowers.db.dto.UserRequest;
 import in.flowers.db.model.security.User;
 import in.flowers.config.security.jwt.JwtTokenProvider;
 import in.flowers.db.service.UserService;
@@ -20,14 +21,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/v1/auth")
-public class AuthenticationRestControllerV1 {
+@RequestMapping(value = "/api/auth")
+public class AuthenticationApi {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
 
-    public AuthenticationRestControllerV1(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService) {
+    public AuthenticationApi(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
@@ -56,5 +57,9 @@ public class AuthenticationRestControllerV1 {
         }
 
     }
+//    @PostMapping("register")
+//    public ResponseEntity register(@RequestBody UserRequest userRequest){
+//
+//    }
 }
 

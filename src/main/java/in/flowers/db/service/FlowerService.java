@@ -15,7 +15,7 @@ public interface FlowerService {
 
     Flower findByUsername(String name);
 
-    Flower findById(Long id);
+    FlowerDto findById(Long id);
 
     void delete(Long id);
 

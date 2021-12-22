@@ -6,8 +6,8 @@ import in.flowers.db.model.Flower;
 import in.flowers.db.model.security.Status;
 import in.flowers.db.repository.FlowerRepository;
 import in.flowers.db.service.FlowerService;
+import in.flowers.db.service.ImageService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,13 +16,16 @@ import java.util.List;
 @Slf4j
 public class FlowerServiceImpl implements FlowerService {
 
-    private FlowerRepository flowerRepository;
+    private final FlowerRepository flowerRepository;
 
     private final FLowerMapper fLowerMapper;
 
-    public FlowerServiceImpl(FlowerRepository flowerRepository, FLowerMapper fLowerMapper) {
+    private final ImageService imageService;
+
+    public FlowerServiceImpl(FlowerRepository flowerRepository, FLowerMapper fLowerMapper, ImageService imageService) {
         this.flowerRepository = flowerRepository;
         this.fLowerMapper = fLowerMapper;
+        this.imageService = imageService;
     }
 
     @Override
@@ -45,14 +48,13 @@ public class FlowerServiceImpl implements FlowerService {
     }
 
     @Override
-    public Flower findById(Long id) {
-        Flower result = flowerRepository.findById(id).orElse(null);
+    public FlowerDto findById(Long id) {
+        FlowerDto result = fLowerMapper.fromFLower(flowerRepository.findById(id).get());
 
         if (result == null) {
 //            log.warn("IN findById - no user found by id: {}", id);
             return null;
         }
-
 //        log.info("IN findById - user: {} found by id: {}", result);
         return result;
     }
